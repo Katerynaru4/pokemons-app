@@ -1,0 +1,71 @@
+.root{
+    background: linear-gradient(180deg, #FFFFFF 30.32%, #F5F5F5 100%);
+    box-sizing: border-box;
+}
+
+.wrapper{
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+}
+.title{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 35px;
+    line-height: 41px;
+
+    text-align: center;
+    letter-spacing: 3px;
+
+    color: #000000; 
+}
+
+
+.filters{
+    display: flex;
+    
+    height: 100px;
+    position: relative;
+    margin-top: 36px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.filter{
+    width: 135px;
+}
+select{
+    width: 100%;
+    text-align: center;
+    
+    background: #F2F2F2;
+    box-shadow: 2px 2px 2px rgba(33, 33, 33, 0.1);
+    border-radius: 4px;
+    font-size: 16px;
+
+}
+option {
+    background: #F2F2F2;
+    box-shadow: 4px 4px 8px rgba(1, 28, 64, 0.2);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+.cardWrap{
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+.searchInput {
+    display: block;
+
+    & input {
+        width: 300px;
+        margin-right: 10px;
+
+        @media(max-width: 468px){
+            height: 26px;
+            margin-right: 0;
+        }
+    }
+}
