@@ -3,33 +3,26 @@ import PokemonCard from '../PokemonCard';
 import Heading from '../Heading';
 import Layout from '../Layout';
 import s from './Pokedex.module.scss';
-
-type IPokemons = {
-    data: any
-}
-
+import uniqid from 'uniqid';
+import { AppDispatch, RootState } from '../../store/store';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { fetchAndSetPokemonsTypes } from '../../store/actions';
 
 const Pokedex = () => {
     const [searchValue, setSearchValue] = useState('');
     const [data, setData] = useState<any>(null)
-    const [selectedType, setSelectedType] = useState<any>('Type')
-    const [types, setTypes] = useState<any>([])
-
+    const [selectedType, setSelectedType] = useState<any>('')
+    const pokemonsTypes = useSelector((state: RootState) => state.pokemonsTypes)
+    const dispatch: AppDispatch = useDispatch()
 
     useLayoutEffect(() => {
-    fetch("https://pokeapi.co/api/v2/type")
-        .then(response => response.json())
-        .then(data => setTypes(data.results))
-
-    }
-        , [])
-
+        dispatch(fetchAndSetPokemonsTypes())
+    }, [dispatch])
 
     useEffect(() => {
-        if (selectedType !== 'Type') {
-            const selectedTypeUrl = types.find((item: any) => item.name === selectedType).url
-
-            fetch(selectedTypeUrl)
+        if (selectedType !== '') {
+            fetch(selectedType)
                 .then(response => response.json())
                 .then(data => setData(data.pokemon.map((item: any) => item.pokemon).filter((item: any) => item.name.includes(searchValue))))
         } else {
@@ -62,24 +55,24 @@ const Pokedex = () => {
                         </div>
                         <div className={s.filter}>
 
-                            <select value={selectedType} onChange={(e: any) => setSelectedType(e.target.value)}>
-                                <option value="Type">Type</option>
-                                {types.map((item: any) => <option value={item.name}>{item.name}</option>)}
+                            <select value={selectedType} onChange={(e: any) => { setSelectedType(e.target.value) }}>
+                                <option value="">Type</option>
+                                {pokemonsTypes.map((item: any) => <option value={item.url}>{item.name}</option>)}
                             </select>
 
                         </div>
                     </div>
                     <div className={s.cardWrap}>
-                        {
+                        {/* {
                             data &&
                             data.map((pokemon: any) => {
                                 return (
                                     <PokemonCard
-                                        key={pokemon.url}
+                                        key={uniqid()}
                                         pokemon={pokemon}
                                     />
                                 );
-                            })}
+                            })} */}
                     </div>
                     <footer />
                 </div>
