@@ -1,20 +1,26 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
+import uniqid from 'uniqid';
+
+import s from './Pokedex.module.scss';
 import PokemonCard from '../PokemonCard';
+import PokemonPopup from '../PokemonPopup';
 import Heading from '../Heading';
 import Layout from '../Layout';
-import s from './Pokedex.module.scss';
-import uniqid from 'uniqid';
 import { AppDispatch, RootState } from '../../store/store';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchAndSetPokemons, fetchAndSetPokemonsTypes } from '../../store/actions';
+import { IPokemon } from '../../store/types';
 
-const Pokedex = () => {
-    const [searchValue, setSearchValue] = useState('');
-    const [selectedType, setSelectedType] = useState<any>('')
+const Pokedex: React.FC = () => {
+    const dispatch: AppDispatch = useDispatch()
+
     const pokemonsTypes = useSelector((state: RootState) => state.pokemonsTypes)
     const pokemons = useSelector((state: RootState) => state.pokemons)
-    const dispatch: AppDispatch = useDispatch()
+
+    const [searchValue, setSearchValue] = useState<string>('');
+    const [selectedType, setSelectedType] = useState<string>('')
+    const [isPopupOpen, setPopupOpen] = useState<boolean>(false);
+    const [selectedPokemonName, setSelectedPokemonName] = useState<string>('');
 
     useLayoutEffect(() => {
         dispatch(fetchAndSetPokemonsTypes())
@@ -24,50 +30,46 @@ const Pokedex = () => {
         dispatch(fetchAndSetPokemons(searchValue, selectedType))
     }, [dispatch, searchValue, selectedType])
 
-    useEffect(() => {
-        console.log('Pokedex rerender')
-    })
-    
     return (
-        <>
-            <Layout className={s.root}>
-                <div className={s.wrapper}>
-                    <Heading type="l" className={s.title}>
-                        {`${pokemons.length} Pokemons was finded...`}
-                    </Heading>
-                    <div className={s.filters}>
-                        <div className={s.searchInput}>
-                            <input
-                                type="text"
-                                value={searchValue}
-                                onChange={(e: any) => setSearchValue(e.target.value)}
-                                placeholder="Find pokemon by name..."
-                            />
-                        </div>
-                        <div className={s.filter}>
-
-                            <select value={selectedType} onChange={(e: any) => { setSelectedType(e.target.value) }}>
-                                <option value="">Type</option>
-                                {pokemonsTypes.map((item: any) => <option key={uniqid()} value={item.url}>{item.name}</option>)}
-                            </select>
-
-                        </div>
+        <Layout className={s.root}>
+            <div className={s.wrapper}>
+                <Heading type="l" className={s.title}>
+                    {`${pokemons.length} Pokemons was finded...`}
+                </Heading>
+                <div className={s.filters}>
+                    <div className={s.searchInput}>
+                        <input
+                            type="text"
+                            value={searchValue}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)}
+                            placeholder="Find pokemon by name..."
+                        />
                     </div>
-                    <div className={s.cardWrap}>
-                        {
-                            pokemons.map((pokemon: any) => {
-                                return (
-                                    <PokemonCard
-                                        key={uniqid()}
-                                        pokemonName={pokemon.name}
-                                    />
-                                );
-                            })}
+                    <div className={s.filter}>
+
+                        <select value={selectedType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { setSelectedType(e.target.value) }}>
+                            <option value="">Type</option>
+                            {pokemonsTypes.map((item: IPokemon) => <option key={uniqid()} value={item.url}>{item.name}</option>)}
+                        </select>
+
                     </div>
-                    <footer />
                 </div>
-            </Layout>
-        </>
+                <div className={s.cardWrap}>
+                    {
+                        pokemons.map((pokemon: IPokemon) => {
+                            return (
+                                <PokemonCard
+                                    key={uniqid()}
+                                    {...{ pokemonName: pokemon.name, setSelectedPokemonName, setPopupOpen }}
+                                />
+                            );
+                        })}
+                </div>
+                <footer />
+            </div>
+            {isPopupOpen &&
+                <PokemonPopup {...{ pokemonName: selectedPokemonName, setPopupOpen, isPopupOpen }} />}
+        </Layout>
     );
 };
 

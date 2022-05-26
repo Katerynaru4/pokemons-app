@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'infoWrap': string;
-  'label': string;
-  'labelWrap': string;
   'pictureWrap': string;
   'statItem': string;
   'statValue': string;

@@ -1,11 +1,11 @@
-import { useEffect, RefObject } from 'react';
+import React, { useEffect, RefObject } from 'react';
 
 export default function useOutsideClick(
   refs: Array<RefObject<HTMLElement> | undefined>,
   handler?: () => void,
 ) {
   useEffect(() => {
-    function handleClickOutside(event: any) {
+    function handleClickOutside(event: React.MouseEvent<HTMLElement>) {
       if (!handler) return;
 
 
@@ -17,7 +17,7 @@ export default function useOutsideClick(
 
       let containedToAnyRefs = false;
       for (const rf of refs) {
-        if (rf && rf.current && rf.current.contains(event.target)) {
+        if (rf && rf.current && (rf.current as any).contains(event.target)) {
           containedToAnyRefs = true;
           break;
         }
@@ -28,9 +28,9 @@ export default function useOutsideClick(
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside as () => void);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside as () => void);
     };
   }, [refs, handler]);
 }
