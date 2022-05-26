@@ -4,20 +4,24 @@ export type IPokemon = {
 }
 export type IPokemonDetailedData = {
   id: number,
-  moves: { move: { name: string } }[]
-  stats: { stat: { name: string } }[]
+  name: string,
+  moves: { name: string }[]
+  stats: { name: string }[]
+  sprites: {
+    front_default: string
+  }
 }
 
 export interface PokemonsState {
   pokemons: IPokemon[] | [];
   pokemonsTypes: IPokemon[] | [];
-  pokemonDetailedData: IPokemonDetailedData | {};
+  pokemonDetailedData: IPokemonDetailedData;
 }
 
 const initialState = {
   pokemons: [],
   pokemonsTypes: [],
-  pokemonDetailedData: {}
+  pokemonDetailedData: {} as IPokemonDetailedData
 }
 
 // export const SET_POKEMONS = "SET_POKEMONS";

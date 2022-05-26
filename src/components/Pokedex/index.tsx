@@ -7,13 +7,13 @@ import uniqid from 'uniqid';
 import { AppDispatch, RootState } from '../../store/store';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { fetchAndSetPokemonsTypes } from '../../store/actions';
+import { fetchAndSetPokemons, fetchAndSetPokemonsTypes } from '../../store/actions';
 
 const Pokedex = () => {
     const [searchValue, setSearchValue] = useState('');
-    const [data, setData] = useState<any>(null)
     const [selectedType, setSelectedType] = useState<any>('')
     const pokemonsTypes = useSelector((state: RootState) => state.pokemonsTypes)
+    const pokemons = useSelector((state: RootState) => state.pokemons)
     const dispatch: AppDispatch = useDispatch()
 
     useLayoutEffect(() => {
@@ -21,28 +21,19 @@ const Pokedex = () => {
     }, [dispatch])
 
     useEffect(() => {
-        if (selectedType !== '') {
-            fetch(selectedType)
-                .then(response => response.json())
-                .then(data => setData(data.pokemon.map((item: any) => item.pokemon).filter((item: any) => item.name.includes(searchValue))))
-        } else {
-            fetch("https://pokeapi.co/api/v2/pokemon?limit=300&offset=0")
-                .then(response => response.json())
-                .then(data => setData(data.results.filter((item: any) => item.name.includes(searchValue))))
-        }
+        dispatch(fetchAndSetPokemons(searchValue, selectedType))
+    }, [dispatch, searchValue, selectedType])
 
-    }, [selectedType, searchValue])
-
-
-
-    console.log(data)
-
+    useEffect(() => {
+        console.log('Pokedex rerender')
+    })
+    
     return (
         <>
             <Layout className={s.root}>
                 <div className={s.wrapper}>
                     <Heading type="l" className={s.title}>
-                        {data && `${data.length} Pokemons for you to choose your favorite`}
+                        {`${pokemons.length} Pokemons was finded...`}
                     </Heading>
                     <div className={s.filters}>
                         <div className={s.searchInput}>
@@ -57,22 +48,21 @@ const Pokedex = () => {
 
                             <select value={selectedType} onChange={(e: any) => { setSelectedType(e.target.value) }}>
                                 <option value="">Type</option>
-                                {pokemonsTypes.map((item: any) => <option value={item.url}>{item.name}</option>)}
+                                {pokemonsTypes.map((item: any) => <option key={uniqid()} value={item.url}>{item.name}</option>)}
                             </select>
 
                         </div>
                     </div>
                     <div className={s.cardWrap}>
-                        {/* {
-                            data &&
-                            data.map((pokemon: any) => {
+                        {
+                            pokemons.map((pokemon: any) => {
                                 return (
                                     <PokemonCard
                                         key={uniqid()}
-                                        pokemon={pokemon}
+                                        pokemonName={pokemon.name}
                                     />
                                 );
-                            })} */}
+                            })}
                     </div>
                     <footer />
                 </div>

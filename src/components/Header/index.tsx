@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import s from './Header.module.scss';
 import Layout from '../Layout';
 
 const Header = () => {
+  useEffect(() => {
+    console.log('Header rerender')
+})
   return (
     <Layout>
       <div className={s.wrapper}>
