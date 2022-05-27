@@ -3,14 +3,14 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 Used technologies: 
-    - React
-    - eslint
-    - axios
-    - redux (without tools)
-    - sass/scss
-    - typescript
-    - unit tests
-    - [Api](https://pokeapi.co/)
+- React
+- eslint
+- axios
+- redux (without tools)
+- sass/scss
+- typescript
+- unit tests
+- [Api](https://pokeapi.co/)
 
 Implemented: 
 - searching by name
