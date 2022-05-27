@@ -8,8 +8,8 @@ import Heading from '../Heading';
 import Layout from '../Layout';
 import { AppDispatch, RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAndSetPokemons, fetchAndSetPokemonsTypes } from '../../store/actions';
-import { IPokemon } from '../../store/types';
+import { fetchAndSetPokemons, fetchAndSetPokemonsTypes, setPokemonDetailedData } from '../../store/actions';
+import { IPokemon, IPokemonDetailedData } from '../../store/types';
 
 const Pokedex: React.FC = () => {
     const dispatch: AppDispatch = useDispatch()
@@ -29,6 +29,12 @@ const Pokedex: React.FC = () => {
     useEffect(() => {
         dispatch(fetchAndSetPokemons(searchValue, selectedType))
     }, [dispatch, searchValue, selectedType])
+
+    useEffect(() => {
+        if (!isPopupOpen) {
+            dispatch(setPokemonDetailedData({} as IPokemonDetailedData))
+        }
+    }, [dispatch, isPopupOpen])
 
     return (
         <Layout className={s.root}>

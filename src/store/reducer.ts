@@ -1,6 +1,7 @@
 import {
   IPokemonDetailedData,
   PokemonsState,
+  ActionType
 } from './types';
 
 const initialState = {
@@ -9,7 +10,7 @@ const initialState = {
   pokemonDetailedData: {} as IPokemonDetailedData
 }
 
-export const rootReducer = (state: PokemonsState = initialState, action: any) => {
+export const rootReducer = (state: PokemonsState = initialState, action: ActionType) => {
   switch (action.type) {
     case "SET_POKEMONS": {
       return { ...state, pokemons: action.payload }

@@ -1,43 +1,34 @@
-import { IPokemon, IPokemonDetailedData } from './types'
-import { AppDispatch } from './store'
+import axios from 'axios';
 
-export type setPokemonsType = { type: "SET_POKEMONS", payload: IPokemon[] }
-export type setPokemonsTypesType = { type: "SET_POKEMONS_TYPES", payload: IPokemon[] }
-export type setPokemonDetailedDataType = { type: "SET_POKEMON_DETAILED_DATA", payload: IPokemonDetailedData }
+import { IPokemon, IPokemonDetailedData, getPokemons, getPokemonsListByType, setPokemonsType, setPokemonsTypesType, setPokemonDetailedDataType } from './types'
+import { AppDispatch } from './store'
 
 export const setPokemons = (pokemons: IPokemon[]): setPokemonsType => ({ type: "SET_POKEMONS", payload: pokemons })
 export const setPokemonsTypes = (types: IPokemon[]): setPokemonsTypesType => ({ type: "SET_POKEMONS_TYPES", payload: types })
 export const setPokemonDetailedData = (data: IPokemonDetailedData): setPokemonDetailedDataType => ({ type: "SET_POKEMON_DETAILED_DATA", payload: data })
 
 export const fetchAndSetPokemons = (searchValue: string, typeUrl: string) => {
-  return (dispatch: AppDispatch) => {
+  return async (dispatch: AppDispatch) => {
     if (typeUrl) {
-      fetch(typeUrl)
-        .then(response => response.json())
-        .then(data => dispatch(setPokemons(data.pokemon.map((item: { pokemon: string }) => item.pokemon).filter((item: IPokemon) => item.name.includes(searchValue)))))
+      const response = await axios.get<getPokemonsListByType>(typeUrl)
+      dispatch(setPokemons(response.data.pokemon.map((item) => item.pokemon).filter((item) => item.name.includes(searchValue))))
     } else {
-      fetch("https://pokeapi.co/api/v2/pokemon?limit=300&offset=0")
-        .then(response => response.json())
-        .then(data => dispatch(setPokemons(data.results.filter((item: IPokemon) => item.name.includes(searchValue)))))
+      const response = await axios.get<getPokemons>("https://pokeapi.co/api/v2/pokemon?limit=300&offset=0")
+      dispatch(setPokemons(response.data.results.filter((item: IPokemon) => item.name.includes(searchValue))))
     }
   }
 }
 
 export const fetchAndSetPokemonsTypes = () => {
-  return (dispatch: AppDispatch) => {
-    fetch("https://pokeapi.co/api/v2/type")
-      .then(response => response.json())
-      .then(data => dispatch(setPokemonsTypes(data.results)))
+  return async (dispatch: AppDispatch) => {
+    const response = await axios.get<getPokemons>('https://pokeapi.co/api/v2/type')
+    dispatch(setPokemonsTypes(response.data.results))
   };
 };
 
 export const fetchAndSetPokemonDetailedData = (name: string) => {
-  return (dispatch: AppDispatch) => {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${name}`)
-      .then((data) => data.json())
-      .then((data) => {
-        dispatch(setPokemonDetailedData(data))
-      }
-      )
+  return async (dispatch: AppDispatch) => {
+    const response = await axios.get<IPokemonDetailedData>(`https://pokeapi.co/api/v2/pokemon/${name}`)
+    dispatch(setPokemonDetailedData(response.data))
   };
 };
