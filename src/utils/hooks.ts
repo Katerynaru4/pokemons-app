@@ -17,6 +17,7 @@ export default function useOutsideClick(
 
       let containedToAnyRefs = false;
       for (const rf of refs) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (rf && rf.current && (rf.current as any).contains(event.target)) {
           containedToAnyRefs = true;
           break;
