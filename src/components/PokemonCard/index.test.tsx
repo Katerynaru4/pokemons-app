@@ -37,7 +37,7 @@ describe('PokemonCard', () => {
             render(<PokemonCard {...{ pokemonName, setSelectedPokemonName, setPopupOpen }} />, container);
         })
 
-        expect(container?.textContent).toContain('Bulbasaur');
+        expect(container?.textContent).toContain("DittoLook at details...");
     })
     it('render with root block', () => {
         act(() => {
