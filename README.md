@@ -1,7 +1,20 @@
-# Getting Started with Create React App
+# Pokemons App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Used technologies: 
+    - React
+    - eslint
+    - axios
+    - redux (without tools)
+    - sass/scss
+    - typescript
+    - unit tests
+    - [Api](https://pokeapi.co/)
+
+Implemented: 
+- searching by name
+- sorting by types
 ## Available Scripts
 
 In the project directory, you can run:
